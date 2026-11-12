@@ -111,6 +111,9 @@ public class BusInfoHomeScreenWidget extends AppWidgetProvider {
                 CurShownStationNum--;
                 break;
 
+            case OnClickRefresh:
+                break;
+
             default:
                 break;
         }
@@ -147,6 +150,7 @@ public class BusInfoHomeScreenWidget extends AppWidgetProvider {
 
         for (int widgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, widgetId);
+            appWidgetManager.notifyAppWidgetViewDataChanged(widgetId, R.id.HS_BusesList);
         }
 
 
