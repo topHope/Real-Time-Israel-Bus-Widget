@@ -30,4 +30,3 @@ i use busnearby (hope on/egg) api to get data.
 if you want to add or to point out something please do!
 help is more then welcome here
 
-
