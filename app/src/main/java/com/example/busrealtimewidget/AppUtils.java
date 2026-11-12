@@ -88,11 +88,12 @@ public class AppUtils {
     //given a path, itll load the stations and returns the array of them
     public static ArrayList<BusStationObject> ReadSavedStations(File path) {
 
+
         String SaveString = ReadData(path, SavedStationsFileName);
 
         System.out.println("SSSS  " + SaveString);
         if (SaveString.equals(AppUtils.FailToLoadStr)) {
-            return null;
+            return  new ArrayList<>();
         }
 
 
