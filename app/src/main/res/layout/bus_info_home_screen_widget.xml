@@ -1,0 +1,95 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.BusRealTimeWidget.AppWidget.Container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTint="@color/widget_bg"
+    android:theme="@style/Theme.BusRealTimeWidget.AppWidgetContainer">
+
+    <!-- Compact header: station name + ID on one row -->
+    <LinearLayout
+        android:id="@+id/HSWidget_Header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/widget_bg_1"
+        android:gravity="center_vertical"
+        android:layoutDirection="ltr"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="4dp">
+
+        <TextView
+            android:id="@+id/HSWidget_Station_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Station name!"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/HSWidget_Station_ID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:maxLines="1"
+            android:text="xxxxx"
+            android:textColor="@color/light_blue_50"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <!-- Bus list: bottom padding keeps the last rows clear of the floating buttons -->
+    <ListView
+        android:id="@+id/HS_BusesList"
+        android:layoutDirection="ltr"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/HSWidget_Header"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/white"
+        android:clipToPadding="false"
+        android:divider="#1A000000"
+        android:dividerHeight="1dp"
+        android:paddingBottom="60dp"
+        android:paddingHorizontal="4dp"
+        android:scrollbars="none" />
+
+    <!-- Reload: anchored bottom-left -->
+    <ImageButton
+        android:id="@+id/HSWidget_ReloadButton"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="14dp"
+        android:background="@color/widget_bg_1"
+        android:contentDescription="Reload"
+        android:padding="10dp"
+        android:scaleType="fitCenter"
+        android:src="@android:drawable/ic_popup_sync"
+        android:tint="@color/white" />
+
+    <!-- Next: anchored bottom-right -->
+    <ImageButton
+        android:id="@+id/HSWidget_NextButton"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="14dp"
+        android:layout_marginRight="14dp"
+        android:background="@color/widget_bg_1"
+        android:contentDescription="Next station"
+        android:padding="10dp"
+        android:scaleType="fitCenter"
+        android:src="@android:drawable/ic_media_next"
+        android:tint="@color/white" />
+
+</RelativeLayout>
