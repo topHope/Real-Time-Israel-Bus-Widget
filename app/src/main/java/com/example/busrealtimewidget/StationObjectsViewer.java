@@ -22,6 +22,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+
+
+//controls the list of stations on the main screen
 public class StationObjectsViewer  extends RecyclerView.Adapter<StationObjectsViewer.MyViewHolder> {
 
     Context context;

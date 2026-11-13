@@ -38,6 +38,8 @@ public class BusInfoHomeScreenWidget extends AppWidgetProvider {
     // Builds/refreshes the RemoteViews for a single widget instance
     private void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int widgetId) {
 
+
+
         //setup layout
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.bus_info_home_screen_widget);
         views.setTextViewText(R.id.HSWidget_Station_name, AppUtils.FailToLoadStr);
@@ -53,10 +55,7 @@ public class BusInfoHomeScreenWidget extends AppWidgetProvider {
         Intent serviceIntent = new Intent(context, HSListViewAdapter.class);
         serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
         serviceIntent.putExtra("cur_shown_station_index", CurShownStationNum);
-
-
         serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
-
         views.setRemoteAdapter(R.id.HS_BusesList, serviceIntent);
 
 
@@ -82,6 +81,7 @@ public class BusInfoHomeScreenWidget extends AppWidgetProvider {
             return;
 
         BusStationObject curShownStation = this.AllStations.get(this.CurShownStationNum);
+        curShownStation.UpdateETAs();
 
         if(curShownStation == null)
             return;;

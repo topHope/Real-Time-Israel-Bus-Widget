@@ -1,7 +1,21 @@
 package com.example.busrealtimewidget;
 
-import java.util.ArrayList;
+import android.os.Handler;
+import android.os.Looper;
 
+import java.sql.Time;
+import java.time.Instant;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+
+//holds the info on a station
 public class BusStationObject {
 
 
@@ -12,15 +26,24 @@ public class BusStationObject {
 
     private ArrayList<String> BusIDs;
 
+    //dict of timings. keys are bus id and values are a list of timeings
+    private Map<String, ArrayList<String>> RoutesTimeings_ThisStation;
+
+    private Instant LastRoutesUpdateTime;
+
 
     public BusStationObject(String name, String stationID, String... busIDs) {
         Name = name;
         StationID = stationID;
-        this.BusIDs = new ArrayList<String>();
 
+        this.BusIDs = new ArrayList<String>();
         for(String cur : busIDs) {
             this.BusIDs.add(cur);
         }
+
+        this.RoutesTimeings_ThisStation = new LinkedHashMap<>();
+        this.LastRoutesUpdateTime = Instant.now().plusSeconds(-100);
+        this.UpdateETAs();
 
     }
 
@@ -92,5 +115,56 @@ public class BusStationObject {
 
     public ArrayList<String> getBusIDs() {
         return BusIDs;
+    }
+
+
+    //updates this object's timings data
+    public void UpdateETAs() {
+
+        if(this.LastRoutesUpdateTime == null)
+            this.LastRoutesUpdateTime = Instant.now().plusSeconds(-100);
+
+
+        //if the last update time was less then x sec ago, dont update
+        if(!this.LastRoutesUpdateTime.isBefore(Instant.now().minusSeconds(5)))
+            return;
+
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler mainHandler = new Handler(Looper.getMainLooper());
+
+        executor.execute(() -> {
+            Map<String, ArrayList<String>> result = AppUtils.getETA_Station(this.StationID);
+
+            mainHandler.post(() -> this.RoutesTimeings_ThisStation = result);
+        });
+
+        this.LastRoutesUpdateTime = Instant.now();
+    }
+
+    //returns the array of timings for that route
+    public ArrayList<String> getRouteTimings(int ListIndex) {
+        return  getRouteTimings(this.BusIDs.get(ListIndex));
+    }
+    public ArrayList<String> getRouteTimings(String RouteID) {
+
+       this.UpdateETAs();
+
+        //if the is no route timings
+        if(this.RoutesTimeings_ThisStation == null)
+        {
+            return new ArrayList<>(Arrays.asList(AppUtils.FailToLoadStr));
+        }
+
+        //if the given route id doesnt have any timeings
+        if(!this.RoutesTimeings_ThisStation.containsKey(RouteID))
+            return new ArrayList<>(Arrays.asList("No route timings"));;
+
+
+
+
+
+        return this.RoutesTimeings_ThisStation.get(RouteID);
+
     }
 }

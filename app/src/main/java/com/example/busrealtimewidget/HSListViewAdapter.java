@@ -19,7 +19,7 @@ public class HSListViewAdapter extends RemoteViewsService {
 
         private final Context context;
         private int ShownStationIndex;
-        private final List<String> Busses = new ArrayList<>();
+        private final List<String> rows_String = new ArrayList<>();
 
         HSListViewFactory(Context context, Intent intent) {
             this.context = context;
@@ -33,7 +33,7 @@ public class HSListViewAdapter extends RemoteViewsService {
         // so reading the file (or fetching over the network) is fine here.
         @Override
         public void onDataSetChanged() {
-            Busses.clear();
+            rows_String.clear();
             System.out.println("wwww  shown id " + ShownStationIndex);
 
 
@@ -41,22 +41,22 @@ public class HSListViewAdapter extends RemoteViewsService {
 
             if (station != null) {
                 for (String busId : station.getBusIDs()) {
-                    Busses.add("" + busId + ": " + AppUtils.get_eta_text(String.valueOf(station.getStationID()), busId) + " min");
+                    rows_String.add("" + busId + ": " + station.getRouteTimings(busId).get(0) + " min");
                 }
             }
         }
 
         @Override
         public int getCount() {
-            return Busses.size();
+            return rows_String.size();
         }
 
         @Override
         public RemoteViews getViewAt(int position) {
 
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.hs_list_element_layout);
-            if (position >= 0 && position < Busses.size()) {
-                rv.setTextViewText(R.id.HS_BUSID, Busses.get(position));
+            if (position >= 0 && position < rows_String.size()) {
+                rv.setTextViewText(R.id.HS_BUSID, rows_String.get(position));
                 //rv.setTextViewText(R.id.HS_BUSID, rows.get(position));
             }
             return rv;
@@ -84,7 +84,7 @@ public class HSListViewAdapter extends RemoteViewsService {
 
         @Override
         public void onDestroy() {
-            Busses.clear();
+            rows_String.clear();
         }
     }
 }

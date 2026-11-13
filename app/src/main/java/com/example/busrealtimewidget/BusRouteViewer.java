@@ -27,6 +27,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
+
+//controls the list of routes in a station on the main screen
 public class BusRouteViewer extends RecyclerView.Adapter<BusRouteViewer.MyViewHolder>{
 
     Context context;
@@ -54,9 +56,18 @@ public class BusRouteViewer extends RecyclerView.Adapter<BusRouteViewer.MyViewHo
 
         holder.RouteID.setText("" + routeID);
         holder.RouteImage.setImageResource(android.R.drawable.arrow_up_float);
-        getBusRealTimeETA(StationObject.getStationID(), routeID, result -> {
-            holder.ETA.setText(result);
-         });
+
+        //loads timings data
+
+
+
+        //shows only the first timing
+        holder.ETA.setText(StationObject.getRouteTimings(CurPos).get(0));
+
+        //uses the old eta
+        ///getBusRealTimeETA(StationObject.getStationID(), routeID, result -> {
+        ///   holder.ETA.setText(result);
+        ///});
 
     }
 

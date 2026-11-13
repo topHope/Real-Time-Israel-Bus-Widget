@@ -188,7 +188,7 @@ public class AppUtils {
             List<String> etas;
             try {
                 String raw = fetchETAData(generateURL(stationId));
-                Map<String, List<String>> etaByLine = parseRawETAData(raw);
+                Map<String, ArrayList<String>> etaByLine = parseRawETAData(raw);
                 etas = etaByLine.get(busId);
                 if (etas == null) {
                     etas = new ArrayList<>();
@@ -201,6 +201,30 @@ public class AppUtils {
             List<String> result = etas;
             mainHandler.post(() -> onResult.accept(result));
         }).start();
+    }
+
+    //returns the eta of all routes in the given station
+    //returns a dict of arrays of timings -> routeID : array<String> [x, x, x, x]
+    public static Map<String, ArrayList<String>> getETA_Station(String stationID) {
+        String theURL = generateURL(stationID);
+
+        String rawData = AppUtils.FailToLoadStr;
+        try {
+            rawData = fetchETAData(theURL);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        if(rawData.equals(AppUtils.FailToLoadStr))
+            return null;
+
+        try {
+            return parseRawETAData(rawData);
+        } catch (Exception e) {
+
+        }
+
+        return null;
     }
 
 
@@ -249,10 +273,10 @@ public class AppUtils {
     }
 
 
-    //given the raw eta data, itll give a dict based on bus id of list of etas
-    // like this:   <bus id> : [x, x, x, x]
-    private static Map<String, List<String>> parseRawETAData(String rawJson) {
-        Map<String, List<String>> etaByLine = new LinkedHashMap<>();
+    //given the raw eta data, itll give a dict based on routes id of list of etas
+    // like this:   <route id> : array<string> [x, x, x, x]
+    private static Map<String, ArrayList<String>> parseRawETAData(String rawJson) {
+        Map<String, ArrayList<String>> etaByLine = new LinkedHashMap<>();
         OffsetDateTime now = OffsetDateTime.now();
         ZoneId israel = ZoneId.of("Asia/Jerusalem");
         DateTimeFormatter clock = DateTimeFormatter.ofPattern("HH:mm");
