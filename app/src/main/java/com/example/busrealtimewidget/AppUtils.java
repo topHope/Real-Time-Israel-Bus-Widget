@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -155,6 +156,8 @@ public class AppUtils {
         //return "" + StationId + " | " + BusID;
 
         String theURL = generateURL(StationId);
+        System.out.println("test URL    " + theURL);
+
 
         String rawData = AppUtils.FailToLoadStr;
         try {
@@ -230,8 +233,20 @@ public class AppUtils {
         connection.setRequestProperty("X-BNB-VARIANT", "busnearby");
 
         try {
-            if (connection.getResponseCode() != 200) {
-                throw new IOException("HTTP " + connection.getResponseCode());
+            int code = connection.getResponseCode();
+            if (code != 200) {
+                String msg = "";
+                InputStream err = connection.getErrorStream();
+                if (err != null) {
+                    try (BufferedReader r = new BufferedReader(new InputStreamReader(err, StandardCharsets.UTF_8))) {
+                        StringBuilder sb = new StringBuilder();
+                        String l;
+                        while ((l = r.readLine()) != null) sb.append(l);
+                        msg = sb.toString();
+                    }
+                }
+                System.out.println("ETA Error IOException | HTTP " + code + " for " + url + " body: " + msg);
+               return AppUtils.FailToLoadStr;
             }
 
             StringBuilder body = new StringBuilder();
