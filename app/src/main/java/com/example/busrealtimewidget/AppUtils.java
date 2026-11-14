@@ -228,6 +228,7 @@ public class AppUtils {
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setConnectTimeout(5000);
         connection.setReadTimeout(15000);
+        connection.setRequestProperty("User-Agent", "okhttp/4.12.0");
         connection.setRequestProperty("Accept", "application/json");
         connection.setRequestProperty("Accept-Language", "he");
         connection.setRequestProperty("X-BNB-VARIANT", "busnearby");
